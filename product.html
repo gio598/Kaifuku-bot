@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaifuku Store | Produk</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #030105; background: radial-gradient(circle at 50% -20%, #150a2e 0%, #030105 100%); font-family: 'Plus Jakarta Sans', sans-serif; color: #ffffff; margin: 0; }
+        .product-card { background: rgba(17, 18, 24, 0.65); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); transition: 0.4s; }
+        .product-card:hover { transform: translateY(-5px); border-color: rgba(139, 92, 246, 0.3); }
+        .btn-order { background: #ffffff; color: #000000; transition: 0.3s; }
+        #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <nav class="p-6 flex items-center gap-3"><div class="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white"><i class="fas fa-server"></i></div><h1 class="font-extrabold text-xl">Kaifuku Store</h1></nav>
+    <main class="max-w-md mx-auto px-6 py-12">
+        <h2 class="text-2xl font-black mb-6 text-center">PILIH NODE</h2>
+        <div class="space-y-4">
+            <div class="product-card p-5 rounded-2xl">
+                <h3 class="text-xl font-black">PUBLIC 5GB</h3>
+                <p class="text-xs text-gray-400 mb-4">Ram: 5048 MB | CPU: 160%</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-xl font-black">Rp 6.500</span>
+                    <button onclick="order('PUBLIC 5GB', '6.500')" class="btn-order px-6 py-2 rounded-xl font-bold">ORDER</button>
+                </div>
+            </div>
+            <div class="product-card p-5 rounded-2xl">
+                <h3 class="text-xl font-black">PUBLIC 6GB</h3>
+                <p class="text-xs text-gray-400 mb-4">Ram: 6144 MB | CPU: 200%</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-xl font-black">Rp 8.000</span>
+                    <button onclick="order('PUBLIC 6GB', '8.000')" class="btn-order px-6 py-2 rounded-xl font-bold">ORDER</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS("particles-js", { "particles": { "number": { "value": 40 }, "color": { "value": "#6366f1" }, "line_linked": { "enable": true, "distance": 180, "color": "#8b5cf6", "opacity": 0.15 }, "move": { "enable": true, "speed": 0.8 } } });
+        function order(name, price) {
+            const botUser = "KaifukuStore_Bot"; // GANTI USERNAME BOT KAMU DISINI
+            const msg = `Halo, saya mau order Node: ${name} seharga Rp${price}. Mohon QRIS nya!`;
+            window.location.href = `https://t.me/${botUser}?text=${encodeURIComponent(msg)}`;
+        }
+    </script>
+</body>
+</html>

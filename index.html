@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaifuku Store | Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            background-color: #030105; 
+            background: radial-gradient(circle at 50% -20%, #150a2e 0%, #030105 100%); 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            color: #ffffff; 
+            margin: 0; 
+            overflow: hidden; 
+        }
+
+        /* Loader Styles */
+        #loader-wrapper { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: #030105; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 9999; 
+            transition: opacity 0.8s ease, visibility 0.8s; 
+        }
+        .diamond-loader { width: 70px; height: 70px; transform: rotate(45deg); animation: pulseDiamond 2s infinite ease-in-out; }
+        .diamond-path { fill: none; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 60 180; animation: dashMove 2s infinite linear; }
+        .d-purple { stroke: #a855f7; } .d-blue { stroke: #3b82f6; } .d-red { stroke: #ef4444; } .d-white { stroke: #ffffff; }
+        
+        @keyframes dashMove { 0% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -240; } }
+        @keyframes pulseDiamond { 0%, 100% { transform: rotate(45deg) scale(1); } 50% { transform: rotate(45deg) scale(1.1); } }
+        
+        .loader-text { margin-top: 50px; font-weight: 800; letter-spacing: 4px; font-size: 10px; opacity: 0.8; }
+        .bar-bg { width: 180px; height: 2px; background: rgba(255,255,255,0.1); margin-top: 15px; border-radius: 10px; overflow: hidden; }
+        .bar-fill { width: 0%; height: 100%; background: #a855f7; transition: width 0.1s linear; }
+
+        body.loaded { overflow-y: auto; overflow-x: hidden; }
+        .loaded #loader-wrapper { opacity: 0; visibility: hidden; }
+
+        /* Particles Background */
+        #particles-js { 
+            position: fixed; 
+            width: 100%; 
+            height: 100%; 
+            top: 0; 
+            left: 0; 
+            z-index: 1; /* Di atas background tapi di bawah konten */
+        }
+
+        .main-content {
+            position: relative;
+            z-index: 10; /* Pastikan konten di atas partikel */
+        }
+
+        /* Premium Button */
+        @keyframes spinGlow { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+        @keyframes shimmerText { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        
+        .premium-btn-box { 
+            position: relative; 
+            padding: 2px; 
+            border-radius: 1.25rem; 
+            overflow: hidden; 
+            width: 100%; 
+            box-shadow: 0 10px 30px rgba(234, 179, 8, 0.15); 
+            transition: all 0.4s; 
+        }
+        .premium-btn-box::before { 
+            content: ''; 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            width: 300%; 
+            height: 300%; 
+            background: conic-gradient(transparent, transparent, transparent, #eab308, #fef08a, transparent); 
+            animation: spinGlow 2.5s linear infinite; 
+            z-index: 0; 
+        }
+        .btn-premium-inner { 
+            position: relative; 
+            z-index: 10; 
+            width: 100%; 
+            background: #111218; 
+            border-radius: 1.2rem; 
+            transition: background 0.3s; 
+        }
+        .shimmer-text { 
+            background: linear-gradient(90deg, #ffffff 0%, #fef08a 50%, #ffffff 100%); 
+            background-size: 200% auto; 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            animation: shimmerText 3s linear infinite; 
+        }
+    </style>
+</head>
+<body>
+    <div id="loader-wrapper">
+        <div class="diamond-loader">
+            <svg viewBox="0 0 100 100">
+                <rect class="diamond-path d-purple" x="10" y="10" width="80" height="80" rx="2"/>
+                <rect class="diamond-path d-blue" x="10" y="10" width="80" height="80" rx="2" stroke-dashoffset="-60"/>
+                <rect class="diamond-path d-red" x="10" y="10" width="80" height="80" rx="2" stroke-dashoffset="-120"/>
+                <rect class="diamond-path d-white" x="10" y="10" width="80" height="80" rx="2" stroke-dashoffset="-180"/>
+            </svg>
+        </div>
+        <h2 class="loader-text">INITIALIZING SYSTEM</h2>
+        <div class="bar-bg"><div id="bar" class="bar-fill"></div></div>
+    </div>
+
+    <div id="particles-js"></div>
+
+    <div class="main-content">
+        <nav class="fixed w-full p-6 z-50 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white">
+                    <i class="fas fa-server"></i>
+                </div>
+                <h1 class="font-extrabold text-xl">Kaifuku Store</h1>
+            </div>
+        </nav>
+
+        <section class="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-20">
+            <div class="mb-6 px-4 py-1.5 border border-purple-500/20 bg-purple-500/10 rounded-full text-[10px] font-bold text-purple-400">NEXT-GEN CLOUD</div>
+            
+            <h2 class="text-4xl md:text-7xl font-black mb-6">
+                Selamat datang di <br/>
+                <span class="typed-text text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500"></span>
+            </h2>
+
+            <p class="text-gray-400 max-w-md mb-10 text-sm md:text-base leading-relaxed">
+                Penyedia layanan Panel Pterodactyl terbaik dengan uptime maksimal untuk kebutuhan Bot & Game Server kamu.
+            </p>
+
+            <div class="w-full max-w-sm px-2">
+                <div class="premium-btn-box">
+                    <button onclick="window.location.href='product.html'" class="btn-premium-inner w-full py-5 font-black text-sm tracking-widest flex items-center justify-center gap-3">
+                        <i class="fas fa-shopping-cart text-yellow-400"></i>
+                        <span class="shimmer-text">LIHAT SEMUA KATALOG</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        window.onload = function() {
+            let count = 0;
+            const bar = document.getElementById('bar');
+            const interval = setInterval(() => {
+                count += 5;
+                bar.style.width = count + '%';
+                if (count >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        document.body.classList.add('loaded');
+                        initParticles();
+                        type();
+                    }, 500);
+                }
+            }, 50);
+        };
+
+        function initParticles() {
+            particlesJS("particles-js", {
+                "particles": {
+                    "number": { "value": 50, "density": { "enable": true, "value_area": 800 } },
+                    "color": { "value": "#6366f1" },
+                    "shape": { "type": "circle" },
+                    "opacity": { "value": 0.4 },
+                    "size": { "value": 3, "random": true },
+                    "line_linked": { "enable": true, "distance": 150, "color": "#8b5cf6", "opacity": 0.1, "width": 1 },
+                    "move": { "enable": true, "speed": 1.2 }
+                },
+                "retina_detect": true
+            });
+        }
+
+        const typedTextSpan = document.querySelector(".typed-text");
+        const textArray = ["Kaifuku Store", "Panel Pterodactyl"];
+        let textArrayIndex = 0, charIndex = 0;
+
+        function type() {
+            if (charIndex < textArray[textArrayIndex].length) {
+                typedTextSpan.textContent += textArray[textArrayIndex].charAt(charIndex);
+                charIndex++;
+                setTimeout(type, 100);
+            } else {
+                setTimeout(erase, 2000);
+            }
+        }
+
+        function erase() {
+            if (charIndex > 0) {
+                typedTextSpan.textContent = textArray[textArrayIndex].substring(0, charIndex - 1);
+                charIndex--;
+                setTimeout(erase, 50);
+            } else {
+                textArrayIndex = (textArrayIndex + 1) % textArray.length;
+                setTimeout(type, 500);
+            }
+        }
+    </script>
+</body>
+</html>
