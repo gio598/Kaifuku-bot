@@ -3,122 +3,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kaifuku Store | Catalog</title>
+    <title>Kaifuku Store | Katalog Produk</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #030105; font-family: 'Plus Jakarta Sans', sans-serif; color: white; margin: 0; overflow-x: hidden; }
-        #particles-js { position: fixed; width: 100%; height: 100%; z-index: 1; }
-        .content-wrapper { position: relative; z-index: 10; padding: 20px; }
-        .glass-card { 
-            background: rgba(255, 255, 255, 0.03); 
-            backdrop-filter: blur(10px); 
-            border: 1px solid rgba(255, 255, 255, 0.05); 
-            border-radius: 20px;
+        body { 
+            background-color: #030105; 
+            background: radial-gradient(circle at 50% -20%, #2a0808 0%, #030105 100%); 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            color: #ffffff; 
+            margin: 0; 
+            overflow-x: hidden; 
+        }
+
+        /* --- PARTICLES BACKGROUND --- */
+        #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 1; pointer-events: none; }
+        .main-content { position: relative; z-index: 10; }
+
+        /* --- STYLES UNTUK LIST PRODUK --- */
+        .category-title { font-weight: 800; font-size: 14px; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; margin-top: 32px; margin-bottom: 16px; text-transform: uppercase; }
+        .category-line { width: 4px; height: 20px; border-radius: 4px; }
+        
+        .item-card { 
+            background: rgba(18, 10, 10, 0.6); 
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(239, 68, 68, 0.1); 
+            border-radius: 16px; 
+            padding: 16px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 12px;
             transition: all 0.3s ease;
         }
-        .glass-card:hover { transform: translateY(-5px); border-color: rgba(139, 92, 246, 0.5); background: rgba(255, 255, 255, 0.05); }
-        .category-title { border-left: 4px solid #6366f1; padding-left: 15px; margin: 30px 0 15px 0; }
+        .item-card:hover { 
+            border-color: rgba(239, 68, 68, 0.3); 
+            transform: translateY(-2px); 
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.05);
+        }
+
+        /* --- PREMIUM EFFECT --- */
+        .premium-card {
+            position: relative;
+            background: linear-gradient(135deg, rgba(26, 21, 5, 0.8), rgba(10, 10, 5, 0.8));
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            border-radius: 16px;
+            animation: waveBorder 3s infinite alternate ease-in-out;
+        }
+        @keyframes waveBorder {
+            0% { border-color: rgba(251, 191, 36, 0.3); box-shadow: 0 0 10px rgba(251, 191, 36, 0.1); }
+            100% { border-color: rgba(251, 191, 36, 1); box-shadow: 0 0 25px rgba(251, 191, 36, 0.4); }
+        }
+        .gold-shine { 
+            background: linear-gradient(90deg, #fef08a 0%, #fbbf24 50%, #fef08a 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textShine 3s linear infinite;
+            font-weight: 900;
+            filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.4));
+        }
+        @keyframes textShine { to { background-position: 200% center; } }
+
+        /* Status Dot Animation */
+        .status-dot { animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1); opacity: 1; box-shadow: 0 0 8px #ef4444; }
+            100% { transform: scale(0.95); opacity: 0.5; }
+        }
     </style>
 </head>
-<body>
+<body class="min-h-screen">
+
     <div id="particles-js"></div>
 
-    <div class="content-wrapper max-w-4xl mx-auto">
-        <div class="flex items-center gap-3 mb-10">
-            <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center">
-                <i class="fas fa-server"></i>
+    <div class="main-content p-4 pt-24 max-w-2xl mx-auto">
+        
+        <nav class="fixed top-0 left-0 w-full p-4 z-50 bg-[#030105]/80 backdrop-blur-md border-b border-red-500/10 flex items-center justify-between px-6">
+            <button onclick="window.location.href='index.html'" class="bg-white/5 border border-white/10 hover:bg-red-500/20 hover:border-red-500/40 text-gray-300 hover:text-white px-4 py-2 rounded-xl transition flex items-center gap-2 text-xs font-bold tracking-wider">
+                <i class="fas fa-arrow-left text-red-500"></i> KEMBALI
+            </button>
+            
+            <div class="flex items-center gap-2 bg-red-950/40 border border-red-500/20 px-3 py-1.5 rounded-full text-[10px] font-black tracking-widest text-red-400">
+                <span class="w-2 height w-2 h-2 rounded-full bg-red-500 status-dot"></span>
+                V2.4 ONLINE
             </div>
-            <h1 class="font-extrabold text-xl">Kaifuku Store</h1>
+        </nav>
+
+        <div class="category-title text-red-400"><div class="category-line bg-red-500"></div> BASIC NODE</div>
+        
+        <div class="item-card">
+            <div>
+                <div class="font-extrabold text-white text-lg">RAM 1GB</div>
+                <div class="text-[11px] text-gray-500 font-semibold tracking-wider mb-1">CPU 30%</div>
+                <div class="text-red-400 font-black text-base">Rp 1.500</div>
+            </div>
+            <a href="https://t.me/shikimoriy_bot" class="bg-white hover:bg-gray-200 text-black px-6 py-2.5 rounded-xl font-black text-xs tracking-widest transition">ORDER</a>
         </div>
 
-        <div class="text-center mb-5">
-            <h2 class="text-2xl font-black tracking-widest uppercase">Pilih Node</h2>
+        <div class="item-card">
+            <div>
+                <div class="font-extrabold text-white text-lg">RAM 2GB</div>
+                <div class="text-[11px] text-gray-500 font-semibold tracking-wider mb-1">CPU 60%</div>
+                <div class="text-red-400 font-black text-base">Rp 2.500</div>
+            </div>
+            <a href="https://t.me/shikimoriy_bot" class="bg-white hover:bg-gray-200 text-black px-6 py-2.5 rounded-xl font-black text-xs tracking-widest transition">ORDER</a>
         </div>
 
-        <div class="category-title"><h3 class="font-bold text-indigo-400">BASIC NODE</h3></div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="glass-card p-5 flex justify-between items-center">
-                <div><h4 class="font-bold">RAM 1GB</h4><p class="text-gray-400 text-xs">CPU 30%</p><p class="text-indigo-400 font-bold">Rp 1.500</p></div>
-                <button onclick="order('1GB')" class="bg-white text-black px-4 py-2 rounded-lg font-bold text-xs">ORDER</button>
+        <div class="item-card">
+            <div>
+                <div class="font-extrabold text-white text-lg">RAM 3GB</div>
+                <div class="text-[11px] text-gray-500 font-semibold tracking-wider mb-1">CPU 90%</div>
+                <div class="text-red-400 font-black text-base">Rp 3.500</div>
             </div>
-            <div class="glass-card p-5 flex justify-between items-center">
-                <div><h4 class="font-bold">RAM 2GB</h4><p class="text-gray-400 text-xs">CPU 60%</p><p class="text-indigo-400 font-bold">Rp 2.500</p></div>
-                <button onclick="order('2GB')" class="bg-white text-black px-4 py-2 rounded-lg font-bold text-xs">ORDER</button>
-            </div>
-            <div class="glass-card p-5 flex justify-between items-center">
-                <div><h4 class="font-bold">RAM 3GB</h4><p class="text-gray-400 text-xs">CPU 90%</p><p class="text-indigo-400 font-bold">Rp 3.500</p></div>
-                <button onclick="order('3GB')" class="bg-white text-black px-4 py-2 rounded-lg font-bold text-xs">ORDER</button>
-            </div>
-            <div class="glass-card p-5 flex justify-between items-center">
-                <div><h4 class="font-bold">RAM 4GB</h4><p class="text-gray-400 text-xs">CPU 120%</p><p class="text-indigo-400 font-bold">Rp 5.000</p></div>
-                <button onclick="order('4GB')" class="bg-white text-black px-4 py-2 rounded-lg font-bold text-xs">ORDER</button>
-            </div>
+            <a href="https://t.me/shikimoriy_bot" class="bg-white hover:bg-gray-200 text-black px-6 py-2.5 rounded-xl font-black text-xs tracking-widest transition">ORDER</a>
         </div>
 
-        <div class="category-title"><h3 class="font-bold text-blue-400">MEDIUM NODE</h3></div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="glass-card p-5 flex justify-between items-center">
-                <div><h4 class="font-bold">RAM 5GB</h4><p class="text-gray-400 text-xs">CPU 160%</p><p class="text-blue-400 font-bold">Rp 6.500</p></div>
-                <button onclick="order('5GB')" class="bg-white text-black px-4 py-2 rounded-lg font-bold text-xs">ORDER</button>
+        <div class="item-card">
+            <div>
+                <div class="font-extrabold text-white text-lg">RAM 4GB</div>
+                <div class="text-[11px] text-gray-500 font-semibold tracking-wider mb-1">CPU 120%</div>
+                <div class="text-red-400 font-black text-base">Rp 5.000</div>
             </div>
-            <div class="glass-card p-5 flex justify-between items-center">
-                <div><h4 class="font-bold">RAM 6GB</h4><p class="text-gray-400 text-xs">CPU 200%</p><p class="text-blue-400 font-bold">Rp 8.000</p></div>
-                <button onclick="order('6GB')" class="bg-white text-black px-4 py-2 rounded-lg font-bold text-xs">ORDER</button>
-            </div>
-            <div class="glass-card p-5 flex justify-between items-center">
-                <div><h4 class="font-bold">RAM 7GB</h4><p class="text-gray-400 text-xs">CPU 230%</p><p class="text-blue-400 font-bold">Rp 9.500</p></div>
-                <button onclick="order('7GB')" class="bg-white text-black px-4 py-2 rounded-lg font-bold text-xs">ORDER</button>
-            </div>
+            <a href="https://t.me/shikimoriy_bot" class="bg-white hover:bg-gray-200 text-black px-6 py-2.5 rounded-xl font-black text-xs tracking-widest transition">ORDER</a>
         </div>
 
-        <div class="category-title"><h3 class="font-bold text-purple-400">HIGH NODE</h3></div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="glass-card p-5 flex justify-between items-center">
-                <div><h4 class="font-bold">RAM 8GB</h4><p class="text-gray-400 text-xs">CPU 250%</p><p class="text-purple-400 font-bold">Rp 11.000</p></div>
-                <button onclick="order('8GB')" class="bg-white text-black px-4 py-2 rounded-lg font-bold text-xs">ORDER</button>
+        <div class="category-title text-rose-400"><div class="category-line bg-rose-500"></div> MEDIUM NODE</div>
+
+        <div class="item-card">
+            <div>
+                <div class="font-extrabold text-white text-lg">RAM 5GB</div>
+                <div class="text-[11px] text-gray-500 font-semibold tracking-wider mb-1">CPU 160%</div>
+                <div class="text-rose-400 font-black text-base">Rp 6.500</div>
             </div>
-            <div class="glass-card p-5 flex justify-between items-center">
-                <div><h4 class="font-bold">RAM 9GB</h4><p class="text-gray-400 text-xs">CPU 280%</p><p class="text-purple-400 font-bold">Rp 12.500</p></div>
-                <button onclick="order('9GB')" class="bg-white text-black px-4 py-2 rounded-lg font-bold text-xs">ORDER</button>
-            </div>
-            <div class="glass-card p-5 flex justify-between items-center">
-                <div><h4 class="font-bold">RAM 10GB</h4><p class="text-gray-400 text-xs">CPU 300%</p><p class="text-purple-400 font-bold">Rp 14.000</p></div>
-                <button onclick="order('10GB')" class="bg-white text-black px-4 py-2 rounded-lg font-bold text-xs">ORDER</button>
-            </div>
+            <a href="https://t.me/shikimoriy_bot" class="bg-white hover:bg-gray-200 text-black px-6 py-2.5 rounded-xl font-black text-xs tracking-widest transition">ORDER</a>
         </div>
 
-        <div class="category-title"><h3 class="font-bold text-yellow-400">PREMIUM NODE</h3></div>
-        <div class="grid grid-cols-1 gap-4 mb-20">
-            <div class="glass-card p-6 flex justify-between items-center border-yellow-500/30">
-                <div>
-                    <h4 class="font-bold text-xl">UNLIMITED</h4>
-                    <p class="text-gray-400 text-sm">Best for Big Community Bots</p>
-                    <p class="text-yellow-400 font-bold text-lg mt-1">Rp 20.000</p>
-                </div>
-                <button onclick="order('UNLIMITED')" class="bg-yellow-500 text-black px-8 py-3 rounded-xl font-black text-sm shadow-lg shadow-yellow-500/20">ORDER</button>
+        <div class="item-card">
+            <div>
+                <div class="font-extrabold text-white text-lg">RAM 6GB</div>
+                <div class="text-[11px] text-gray-500 font-semibold tracking-wider mb-1">CPU 200%</div>
+                <div class="text-rose-400 font-black text-base">Rp 8.000</div>
             </div>
+            <a href="https://t.me/shikimoriy_bot" class="bg-white hover:bg-gray-200 text-black px-6 py-2.5 rounded-xl font-black text-xs tracking-widest transition">ORDER</a>
         </div>
+
+        <div class="item-card">
+            <div>
+                <div class="font-extrabold text-white text-lg">RAM 7GB</div>
+                <div class="text-[11px] text-gray-500 font-semibold tracking-wider mb-1">CPU 230%</div>
+                <div class="text-rose-400 font-black text-base">Rp 9.500</div>
+            </div>
+            <a href="https://t.me/shikimoriy_bot" class="bg-white hover:bg-gray-200 text-black px-6 py-2.5 rounded-xl font-black text-xs tracking-widest transition">ORDER</a>
+        </div>
+
+        <div class="category-title text-red-500"><div class="category-line bg-red-600"></div> HIGH NODE</div>
+
+        <div class="item-card">
+            <div>
+                <div class="font-extrabold text-white text-lg">RAM 8GB</div>
+                <div class="text-[11px] text-gray-500 font-semibold tracking-wider mb-1">CPU 250%</div>
+                <div class="text-red-500 font-black text-base">Rp 11.000</div>
+            </div>
+            <a href="https://t.me/shikimoriy_bot" class="bg-white hover:bg-gray-200 text-black px-6 py-2.5 rounded-xl font-black text-xs tracking-widest transition">ORDER</a>
+        </div>
+
+        <div class="item-card">
+            <div>
+                <div class="font-extrabold text-white text-lg">RAM 9GB</div>
+                <div class="text-[11px] text-gray-500 font-semibold tracking-wider mb-1">CPU 280%</div>
+                <div class="text-red-500 font-black text-base">Rp 12.500</div>
+            </div>
+            <a href="https://t.me/shikimoriy_bot" class="bg-white hover:bg-gray-200 text-black px-6 py-2.5 rounded-xl font-black text-xs tracking-widest transition">ORDER</a>
+        </div>
+
+        <div class="item-card">
+            <div>
+                <div class="font-extrabold text-white text-lg">RAM 10GB</div>
+                <div class="text-[11px] text-gray-500 font-semibold tracking-wider mb-1">CPU 300%</div>
+                <div class="text-red-500 font-black text-base">Rp 14.000</div>
+            </div>
+            <a href="https://t.me/shikimoriy_bot" class="bg-white hover:bg-gray-200 text-black px-6 py-2.5 rounded-xl font-black text-xs tracking-widest transition">ORDER</a>
+        </div>
+
+        <div class="category-title text-yellow-500 mt-10"><div class="category-line bg-yellow-500"></div> PREMIUM NODE</div>
+        
+        <div class="item-card premium-card mb-20">
+            <div>
+                <div class="text-xl mb-1 gold-shine uppercase tracking-wide">UNLIMITED</div>
+                <div class="text-[11px] text-yellow-600/80 font-semibold tracking-wide mb-1">Best for Big Community Bots</div>
+                <div class="text-yellow-500 font-bold text-lg">Rp 20.000</div>
+            </div>
+            <a href="https://t.me/shikimoriy_bot" class="bg-yellow-500 hover:bg-yellow-400 text-black px-7 py-3 rounded-xl font-black text-xs tracking-widest transition shadow-[0_0_15px_rgba(251,191,36,0.3)]">ORDER</a>
+        </div>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        particlesJS("particles-js", {
-            "particles": {
-                "number": { "value": 50, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": "#6366f1" },
-                "size": { "value": 2, "random": true },
-                "line_linked": { "enable": true, "distance": 150, "color": "#6366f1", "opacity": 0.1, "width": 1 },
-                "move": { "enable": true, "speed": 0.8 }
-            },
-            "retina_detect": true
+        document.addEventListener("DOMContentLoaded", function() {
+            particlesJS("particles-js", {
+                "particles": { 
+                    "number": { "value": 90 }, 
+                    "color": { "value": ["#ef4444", "#ffffff", "#f43f5e"] }, 
+                    "shape": { "type": "circle" }, 
+                    "opacity": { "value": 0.6, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1 } }, 
+                    "size": { "value": 2.5, "random": true, "anim": { "enable": true, "speed": 3, "size_min": 0.3 } }, 
+                    "line_linked": { "enable": true, "distance": 120, "color": "#ef4444", "opacity": 0.12, "width": 1 }, 
+                    "move": { "enable": true, "speed": 1.2, "random": true } 
+                },
+                "interactivity": { 
+                    "events": { "onhover": { "enable": true, "mode": "bubble" } }, 
+                    "modes": { "bubble": { "distance": 150, "size": 4, "duration": 2, "opacity": 1 } } 
+                }
+            });
         });
-
-        function order(item) {
-            // Ganti "shikimoriy_bot" dengan username bot telegram kamu
-            window.location.href = `https://t.me/shikimoriy_bot?start=order_${item}`;
-        }
     </script>
 </body>
 </html>
