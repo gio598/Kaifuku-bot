@@ -53,7 +53,6 @@
 
         /* --- PARTICLES GLOW EFFECT --- */
         #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 1; pointer-events: none; }
-        /* Membuat partikel terasa lebih hidup dengan glow luar via CSS filter */
         #particles-js canvas {
             filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.8));
         }
@@ -122,7 +121,7 @@
                 </div>
                 <h1 class="font-extrabold text-xl tracking-tighter">Kaifuku Store</h1>
             </div>
-            <div id="server-status" class="text-[10px] font-bold text-gray-400 bg-gray-500/10 px-3 py-1 rounded-full border border-gray-500/20 flex items-center gap-1.5">
+            <div id="server-status" class="text-[10px] font-bold text-gray-400 bg-gray-500/10 px-3 py-1 rounded-full border border-gray-500/20 flex items-center gap-1.5 transition-all duration-300">
                 <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
                 CHECKING...
             </div>
@@ -201,18 +200,40 @@
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const PANEL_URL = ":https://miche.jkt48-private.com"; // Ganti dengan link panelmu
+            // SINKRONISASI CEK STATUS PANEL (Metode Favicon Gambar Akurat)
+            const PANEL_DOMAIN = "https://michie.jkt48-private.com"; 
             
-            async function checkPanelStatus() {
+            function checkPanelStatus() {
                 const badge = document.getElementById('server-status');
-                try {
-                    await fetch(PANEL_URL, { mode: 'no-cors', cache: 'no-store' });
-                    badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_5px_#34d399]"></span> PANEL ONLINE';
-                    badge.className = 'text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 flex items-center gap-1.5 transition-all duration-300 shadow-[0_0_15px_rgba(16,185,129,0.2)]';
-                } catch (error) {
-                    badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_5px_#ef4444]"></span> PANEL OFFLINE';
-                    badge.className = 'text-[10px] font-bold text-red-500 bg-red-500/10 px-3 py-1 rounded-full border border-red-500/20 flex items-center gap-1.5 transition-all duration-300 shadow-[0_0_15px_rgba(239,68,68,0.2)]';
-                }
+                const img = new Image();
+                
+                const timeout = setTimeout(() => {
+                    setOffline(badge);
+                }, 5000);
+
+                img.onload = function() {
+                    clearTimeout(timeout);
+                    setOnline(badge);
+                };
+
+                img.onerror = function() {
+                    clearTimeout(timeout);
+                    setOffline(badge);
+                };
+
+                img.src = PANEL_DOMAIN + '/favicon.ico?v=' + new Date().getTime();
+            }
+
+            function setOnline(badge) {
+                if(!badge) return;
+                badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_5px_#34d399]"></span> PANEL ONLINE';
+                badge.className = 'text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 flex items-center gap-1.5 transition-all duration-300 shadow-[0_0_15px_rgba(16,185,129,0.2)]';
+            }
+
+            function setOffline(badge) {
+                if(!badge) return;
+                badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_5px_#ef4444]"></span> PANEL OFFLINE';
+                badge.className = 'text-[10px] font-bold text-red-500 bg-red-500/10 px-3 py-1 rounded-full border border-red-500/20 flex items-center gap-1.5 transition-all duration-300 shadow-[0_0_15px_rgba(239,68,68,0.2)]';
             }
 
             setTimeout(checkPanelStatus, 1500);
@@ -249,16 +270,8 @@
                     "number": { "value": 110, "density": { "enable": true, "value_area": 600 } },
                     "color": { "value": ["#ef4444", "#ffffff", "#fca5a5"] },
                     "shape": { "type": "circle" },
-                    "opacity": { 
-                        "value": 0.8, // Menaikkan opacity agar cahaya lebih terlihat
-                        "random": true, 
-                        "anim": { "enable": true, "speed": 1, "opacity_min": 0.2, "sync": false } 
-                    },
-                    "size": { 
-                        "value": 3, 
-                        "random": true, 
-                        "anim": { "enable": true, "speed": 4, "size_min": 0.3, "sync": false } 
-                    },
+                    "opacity": { "value": 0.8, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.2, "sync": false } },
+                    "size": { "value": 3, "random": true, "anim": { "enable": true, "speed": 4, "size_min": 0.3, "sync": false } },
                     "line_linked": { "enable": true, "distance": 110, "color": "#ef4444", "opacity": 0.2, "width": 1 },
                     "move": { "enable": true, "speed": 1.5, "direction": "none", "random": true, "straight": false, "out_mode": "out", "bounce": false }
                 },
