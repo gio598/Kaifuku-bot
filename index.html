@@ -10,142 +10,189 @@
     <style>
         body { 
             background-color: #030105; 
-            background: radial-gradient(circle at 50% -20%, #150a2e 0%, #030105 100%); 
+            background: radial-gradient(circle at 50% -20%, #2a0808 0%, #030105 100%); 
             font-family: 'Plus Jakarta Sans', sans-serif; 
             color: #ffffff; 
             margin: 0; 
-            overflow: hidden; 
+            overflow-x: hidden; 
         }
 
-        /* Loader Styles */
+        /* --- STICKY NAVBAR --- */
+        nav {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 1.5rem;
+            z-index: 100;
+            background: rgba(3, 1, 5, 0.4);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(239, 68, 68, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* --- LOADER --- */
         #loader-wrapper { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: #030105; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            z-index: 9999; 
-            transition: opacity 0.8s ease, visibility 0.8s; 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #030105; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; z-index: 9999; 
+            transition: opacity 0.6s ease, visibility 0.6s; 
         }
         .diamond-loader { width: 70px; height: 70px; transform: rotate(45deg); animation: pulseDiamond 2s infinite ease-in-out; }
         .diamond-path { fill: none; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 60 180; animation: dashMove 2s infinite linear; }
-        .d-purple { stroke: #a855f7; } .d-blue { stroke: #3b82f6; } .d-red { stroke: #ef4444; } .d-white { stroke: #ffffff; }
-        
+        .d-red-1 { stroke: #ef4444; } .d-white { stroke: #ffffff; }
         @keyframes dashMove { 0% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -240; } }
         @keyframes pulseDiamond { 0%, 100% { transform: rotate(45deg) scale(1); } 50% { transform: rotate(45deg) scale(1.1); } }
+        .loader-stats { margin-top: 25px; font-weight: 900; font-size: 14px; letter-spacing: 2px; color: #ef4444; }
+        .bar-bg { width: 200px; height: 3px; background: rgba(255,255,255,0.05); margin-top: 15px; border-radius: 10px; overflow: hidden; }
+        .bar-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #b91c1c, #ef4444); transition: width 0.1s linear; }
+
+        body.loaded { overflow-y: auto; }
+        .loaded #loader-wrapper { opacity: 0; visibility: hidden; pointer-events: none; }
+
+        /* --- PARTICLES GLOW EFFECT --- */
+        #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 1; pointer-events: none; }
+        /* Membuat partikel terasa lebih hidup dengan glow luar via CSS filter */
+        #particles-js canvas {
+            filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.8));
+        }
+
+        .main-content { position: relative; z-index: 10; }
+
+        /* --- TEXT EFFECTS & GLOW --- */
+        @keyframes textShimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+        .red-shimmer-text {
+            background: linear-gradient(90deg, #ef4444 0%, #f87171 40%, #ffffff 50%, #f87171 60%, #ef4444 100%);
+            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: textShimmer 4s infinite linear; font-weight: 900; filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.4));
+        }
+        .time-shimmer {
+            background: linear-gradient(90deg, #ffffff 0%, #fca5a5 50%, #ffffff 100%);
+            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: textShimmer 3s infinite linear; font-weight: 800;
+        }
         
-        .loader-text { margin-top: 50px; font-weight: 800; letter-spacing: 4px; font-size: 10px; opacity: 0.8; }
-        .bar-bg { width: 180px; height: 2px; background: rgba(255,255,255,0.1); margin-top: 15px; border-radius: 10px; overflow: hidden; }
-        .bar-fill { width: 0%; height: 100%; background: #a855f7; transition: width 0.1s linear; }
-
-        body.loaded { overflow-y: auto; overflow-x: hidden; }
-        .loaded #loader-wrapper { opacity: 0; visibility: hidden; }
-
-        /* Particles Background */
-        #particles-js { 
-            position: fixed; 
-            width: 100%; 
-            height: 100%; 
-            top: 0; 
-            left: 0; 
-            z-index: 1; /* Di atas background tapi di bawah konten */
+        .highlight-glow {
+            color: #f87171; font-weight: 800;
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.6), 0 0 20px rgba(239, 68, 68, 0.3);
+            letter-spacing: 0.5px;
         }
 
-        .main-content {
-            position: relative;
-            z-index: 10; /* Pastikan konten di atas partikel */
+        /* --- GLOW CURSOR (TIMELINE) --- */
+        .glow-cursor {
+            position: absolute; left: -1.5px; width: 5px; background: #ffffff; border-radius: 20px;
+            box-shadow: 0 0 10px #ef4444, 0 0 20px #ef4444;
+            animation: patrolLine 3s ease-in-out infinite alternate; 
+        }
+        @keyframes patrolLine {
+            0% { top: 0%; height: 30px; }
+            50% { height: 90px; }
+            100% { top: 100%; height: 30px; transform: translateY(-100%); }
         }
 
-        /* Premium Button */
+        /* --- GOLD BUTTON --- */
         @keyframes spinGlow { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
-        @keyframes shimmerText { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-        
-        .premium-btn-box { 
-            position: relative; 
-            padding: 2px; 
-            border-radius: 1.25rem; 
-            overflow: hidden; 
-            width: 100%; 
-            box-shadow: 0 10px 30px rgba(234, 179, 8, 0.15); 
-            transition: all 0.4s; 
-        }
-        .premium-btn-box::before { 
-            content: ''; 
-            position: absolute; 
-            top: 50%; 
-            left: 50%; 
-            width: 300%; 
-            height: 300%; 
-            background: conic-gradient(transparent, transparent, transparent, #eab308, #fef08a, transparent); 
-            animation: spinGlow 2.5s linear infinite; 
-            z-index: 0; 
-        }
-        .btn-premium-inner { 
-            position: relative; 
-            z-index: 10; 
-            width: 100%; 
-            background: #111218; 
-            border-radius: 1.2rem; 
-            transition: background 0.3s; 
-        }
-        .shimmer-text { 
-            background: linear-gradient(90deg, #ffffff 0%, #fef08a 50%, #ffffff 100%); 
-            background-size: 200% auto; 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            animation: shimmerText 3s linear infinite; 
-        }
+        .premium-btn-box { position: relative; padding: 2px; border-radius: 1.25rem; overflow: hidden; width: 100%; }
+        .premium-btn-box::before { content: ''; position: absolute; top: 50%; left: 50%; width: 300%; height: 300%; background: conic-gradient(transparent, transparent, transparent, #eab308, #fef08a, transparent); animation: spinGlow 2.5s linear infinite; }
+        .btn-premium-inner { position: relative; z-index: 10; width: 100%; background: #111218; border-radius: 1.2rem; }
+        .shimmer-btn-text { background: linear-gradient(90deg, #ffffff 0%, #fef08a 50%, #ffffff 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: textShimmer 3s linear infinite; }
     </style>
 </head>
-<body>
+<body class="overflow-hidden">
+
     <div id="loader-wrapper">
         <div class="diamond-loader">
             <svg viewBox="0 0 100 100">
-                <rect class="diamond-path d-purple" x="10" y="10" width="80" height="80" rx="2"/>
-                <rect class="diamond-path d-blue" x="10" y="10" width="80" height="80" rx="2" stroke-dashoffset="-60"/>
-                <rect class="diamond-path d-red" x="10" y="10" width="80" height="80" rx="2" stroke-dashoffset="-120"/>
+                <rect class="diamond-path d-red-1" x="10" y="10" width="80" height="80" rx="2"/>
                 <rect class="diamond-path d-white" x="10" y="10" width="80" height="80" rx="2" stroke-dashoffset="-180"/>
             </svg>
         </div>
-        <h2 class="loader-text">INITIALIZING SYSTEM</h2>
+        <div id="loader-percent" class="loader-stats">0%</div>
         <div class="bar-bg"><div id="bar" class="bar-fill"></div></div>
     </div>
 
     <div id="particles-js"></div>
 
     <div class="main-content">
-        <nav class="fixed w-full p-6 z-50 flex justify-between items-center">
+        <nav>
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white">
+                <div class="w-10 h-10 bg-gradient-to-br from-red-600 to-rose-600 rounded-xl flex items-center justify-center text-white shadow-[0_0_15px_rgba(239,68,68,0.4)]">
                     <i class="fas fa-server"></i>
                 </div>
-                <h1 class="font-extrabold text-xl">Kaifuku Store</h1>
+                <h1 class="font-extrabold text-xl tracking-tighter">Kaifuku Store</h1>
+            </div>
+            <div id="server-status" class="text-[10px] font-bold text-gray-400 bg-gray-500/10 px-3 py-1 rounded-full border border-gray-500/20 flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
+                CHECKING...
             </div>
         </nav>
 
-        <section class="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-20">
-            <div class="mb-6 px-4 py-1.5 border border-purple-500/20 bg-purple-500/10 rounded-full text-[10px] font-bold text-purple-400">NEXT-GEN CLOUD</div>
+        <section class="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-32">
+            <div class="mb-4 px-4 py-1.5 border border-red-500/20 bg-red-500/10 rounded-full text-[10px] font-bold text-red-400 tracking-[0.2em]">NEXT-GEN INFRASTRUCTURE</div>
             
-            <h2 class="text-4xl md:text-7xl font-black mb-6">
-                Selamat datang di <br/>
-                <span class="typed-text text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500"></span>
-            </h2>
+            <div class="min-h-[110px] md:min-h-[130px] flex items-center justify-center mb-6">
+                <h2 class="text-3xl md:text-5xl font-black leading-tight">
+                    Selamat datang di <br/>
+                    <span class="typed-text red-shimmer-text"></span>
+                </h2>
+            </div>
 
-            <p class="text-gray-400 max-w-md mb-10 text-sm md:text-base leading-relaxed">
+            <p class="text-gray-400 max-w-sm mb-10 text-xs md:text-sm leading-relaxed opacity-80">
                 Penyedia layanan Panel Pterodactyl terbaik dengan uptime maksimal untuk kebutuhan Bot & Game Server kamu.
             </p>
 
-            <div class="w-full max-w-sm px-2">
+            <div class="w-full max-w-xs px-2 mb-24">
                 <div class="premium-btn-box">
-                    <button onclick="window.location.href='product.html'" class="btn-premium-inner w-full py-5 font-black text-sm tracking-widest flex items-center justify-center gap-3">
+                    <button onclick="window.location.href='product.html'" class="btn-premium-inner w-full py-4 font-black text-xs tracking-widest flex items-center justify-center gap-3">
                         <i class="fas fa-shopping-cart text-yellow-400"></i>
-                        <span class="shimmer-text">LIHAT SEMUA KATALOG</span>
+                        <span class="shimmer-btn-text">LIHAT SEMUA KATALOG</span>
                     </button>
+                </div>
+            </div>
+
+            <div class="w-full max-w-2xl px-4 pb-32 text-left">
+                <div class="bg-black/40 backdrop-blur-md border border-red-500/20 rounded-3xl p-8 shadow-[0_0_50px_rgba(239,68,68,0.1)]">
+                    <div class="flex items-center gap-3 mb-10">
+                        <div class="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center border border-red-500/30">
+                            <i class="fas fa-bolt text-red-500"></i>
+                        </div>
+                        <h3 class="font-black text-lg tracking-tight uppercase">Alur Aktivasi Sistem Otomatis</h3>
+                    </div>
+
+                    <div class="relative pl-8">
+                        <div class="absolute left-[7px] top-3 bottom-3 w-[2px] bg-red-500/15 z-0">
+                            <div class="glow-cursor"></div>
+                        </div>
+
+                        <div class="space-y-10 relative z-10">
+                            <div class="relative group">
+                                <div class="absolute -left-[33px] top-1 w-4 h-4 rounded-full bg-[#030105] border-2 border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
+                                <h4 class="text-red-400 font-bold text-[10px] mb-2 uppercase tracking-widest">01. Integrasi API Pterodactyl</h4>
+                                <p class="text-gray-400 text-sm leading-relaxed">Sistem Kaifuku terintegrasi langsung dengan jaringan API Pterodactyl. Deteksi pembayaran otomatis memicu alokasi <span class="highlight-glow">resource</span> (RAM/CPU/Disk) secara instan.</p>
+                            </div>
+                            
+                            <div class="relative group">
+                                <div class="absolute -left-[33px] top-1 w-4 h-4 rounded-full bg-[#030105] border-2 border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
+                                <h4 class="text-red-400 font-bold text-[10px] mb-2 uppercase tracking-widest">02. Estimasi Waktu Deploy</h4>
+                                <p class="text-gray-400 text-sm leading-relaxed">Proses <span class="highlight-glow">setup environment</span> dan instalasi server kamu sangat cepat. Biasanya hanya memakan waktu <span class="time-shimmer">1 hingga 4 menit</span> saja.</p>
+                            </div>
+                            
+                            <div class="relative group">
+                                <div class="absolute -left-[33px] top-1 w-4 h-4 rounded-full bg-[#030105] border-2 border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
+                                <h4 class="text-red-400 font-bold text-[10px] mb-2 uppercase tracking-widest">03. Notifikasi Bot Telegram</h4>
+                                <div class="bg-red-500/10 border border-red-500/30 p-4 rounded-xl mt-3">
+                                    <p class="text-[11px] text-red-200"><span class="font-bold">INFO:</span> Setelah pembayaran sukses, detail kredensial login dan link akses panel akan dikirimkan otomatis lewat <span class="highlight-glow">Bot Telegram resmi Kaifuku</span>.</p>
+                                </div>
+                            </div>
+
+                            <div class="relative group">
+                                <div class="absolute -left-[33px] top-1 w-4 h-4 rounded-full bg-[#030105] border-2 border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
+                                <h4 class="text-red-400 font-bold text-[10px] mb-2 uppercase tracking-widest">04. Keamanan & Dukungan Admin</h4>
+                                <p class="text-gray-400 text-sm leading-relaxed">Jika akses belum muncul dalam 5 menit, database kami menjamin saldo kamu tetap aman. Silakan hubungi <span class="highlight-glow">Admin Kaifuku</span> untuk klaim manual akun kamu.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -153,33 +200,72 @@
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        window.onload = function() {
+        document.addEventListener("DOMContentLoaded", function() {
+            const PANEL_URL = ":https://michie.jkt48-private.com"; // Ganti dengan link panelmu
+            
+            async function checkPanelStatus() {
+                const badge = document.getElementById('server-status');
+                try {
+                    await fetch(PANEL_URL, { mode: 'no-cors', cache: 'no-store' });
+                    badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_5px_#34d399]"></span> PANEL ONLINE';
+                    badge.className = 'text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 flex items-center gap-1.5 transition-all duration-300 shadow-[0_0_15px_rgba(16,185,129,0.2)]';
+                } catch (error) {
+                    badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_5px_#ef4444]"></span> PANEL OFFLINE';
+                    badge.className = 'text-[10px] font-bold text-red-500 bg-red-500/10 px-3 py-1 rounded-full border border-red-500/20 flex items-center gap-1.5 transition-all duration-300 shadow-[0_0_15px_rgba(239,68,68,0.2)]';
+                }
+            }
+
+            setTimeout(checkPanelStatus, 1500);
+            setInterval(checkPanelStatus, 60000);
+
+            // Loader Logic
             let count = 0;
             const bar = document.getElementById('bar');
+            const percentText = document.getElementById('loader-percent');
+            
             const interval = setInterval(() => {
-                count += 5;
-                bar.style.width = count + '%';
+                count += Math.floor(Math.random() * 4) + 1;
+                if (count > 100) count = 100;
+                if (bar) bar.style.width = count + '%';
+                if (percentText) percentText.innerHTML = count + '%';
+                
                 if (count >= 100) {
                     clearInterval(interval);
                     setTimeout(() => {
                         document.body.classList.add('loaded');
-                        initParticles();
-                        type();
+                        try {
+                            if (typeof particlesJS !== 'undefined') initParticles();
+                            type();
+                        } catch (e) { console.error(e); }
                     }, 500);
                 }
-            }, 50);
-        };
+            }, 30);
+        });
 
+        // Konfigurasi Partikel Bercahaya
         function initParticles() {
             particlesJS("particles-js", {
                 "particles": {
-                    "number": { "value": 50, "density": { "enable": true, "value_area": 800 } },
-                    "color": { "value": "#6366f1" },
+                    "number": { "value": 110, "density": { "enable": true, "value_area": 600 } },
+                    "color": { "value": ["#ef4444", "#ffffff", "#fca5a5"] },
                     "shape": { "type": "circle" },
-                    "opacity": { "value": 0.4 },
-                    "size": { "value": 3, "random": true },
-                    "line_linked": { "enable": true, "distance": 150, "color": "#8b5cf6", "opacity": 0.1, "width": 1 },
-                    "move": { "enable": true, "speed": 1.2 }
+                    "opacity": { 
+                        "value": 0.8, // Menaikkan opacity agar cahaya lebih terlihat
+                        "random": true, 
+                        "anim": { "enable": true, "speed": 1, "opacity_min": 0.2, "sync": false } 
+                    },
+                    "size": { 
+                        "value": 3, 
+                        "random": true, 
+                        "anim": { "enable": true, "speed": 4, "size_min": 0.3, "sync": false } 
+                    },
+                    "line_linked": { "enable": true, "distance": 110, "color": "#ef4444", "opacity": 0.2, "width": 1 },
+                    "move": { "enable": true, "speed": 1.5, "direction": "none", "random": true, "straight": false, "out_mode": "out", "bounce": false }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": { "onhover": { "enable": true, "mode": "bubble" }, "onclick": { "enable": true, "mode": "push" } },
+                    "modes": { "bubble": { "distance": 150, "size": 6, "duration": 2, "opacity": 1, "speed": 3 } }
                 },
                 "retina_detect": true
             });
@@ -190,16 +276,16 @@
         let textArrayIndex = 0, charIndex = 0;
 
         function type() {
+            if (!typedTextSpan) return;
             if (charIndex < textArray[textArrayIndex].length) {
                 typedTextSpan.textContent += textArray[textArrayIndex].charAt(charIndex);
                 charIndex++;
                 setTimeout(type, 100);
-            } else {
-                setTimeout(erase, 2000);
-            }
+            } else { setTimeout(erase, 2000); }
         }
 
         function erase() {
+            if (!typedTextSpan) return;
             if (charIndex > 0) {
                 typedTextSpan.textContent = textArray[textArrayIndex].substring(0, charIndex - 1);
                 charIndex--;
