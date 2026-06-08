@@ -207,19 +207,19 @@
                 
                 const timeout = setTimeout(() => {
                     badge.className = 'status-container offline flex items-center gap-2 border px-3 py-1.5 rounded-full text-[10px] font-black tracking-widest';
-                    badge.innerHTML = '<span class="status-dot w-2 h-2 rounded-full"></span> V2.4 OFFLINE';
+                    badge.innerHTML = '<span class="status-dot w-2 h-2 rounded-full"></span> PANEL OFFLINE';
                 }, 5000);
 
                 img.onload = function() {
                     clearTimeout(timeout);
                     badge.className = 'status-container online flex items-center gap-2 border px-3 py-1.5 rounded-full text-[10px] font-black tracking-widest';
-                    badge.innerHTML = '<span class="status-dot w-2 h-2 rounded-full"></span> V2.4 ONLINE';
+                    badge.innerHTML = '<span class="status-dot w-2 h-2 rounded-full"></span> PANEL ONLINE';
                 };
 
                 img.onerror = function() {
                     clearTimeout(timeout);
                     badge.className = 'status-container offline flex items-center gap-2 border px-3 py-1.5 rounded-full text-[10px] font-black tracking-widest';
-                    badge.innerHTML = '<span class="status-dot w-2 h-2 rounded-full"></span> V2.4 OFFLINE';
+                    badge.innerHTML = '<span class="status-dot w-2 h-2 rounded-full"></span> PANEL OFFLINE';
                 };
 
                 img.src = PANEL_DOMAIN + '/favicon.ico?v=' + new Date().getTime();
