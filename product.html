@@ -198,36 +198,33 @@
                 "interactivity": { "events": { "onhover": { "enable": true, "mode": "bubble" } }, "modes": { "bubble": { "distance": 150, "size": 4, "duration": 2, "opacity": 1 } } }
             });
 
-            // Logic Status Check untuk Halaman Produk (Proxy AllOrigins)
+            // Logic Status Check Paling Ampuh (Native Fetch No-CORS)
             const PANEL_DOMAIN = "https://michie.jkt48-private.com"; 
 
             async function checkPanelStatus() {
                 const badge = document.getElementById('product-status');
                 if (!badge) return;
 
-                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(PANEL_DOMAIN)}&_=${new Date().getTime()}`;
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000); 
 
                 try {
-                    const response = await fetch(proxyUrl);
-                    if (response.ok) {
-                        badge.className = 'status-container online flex items-center gap-2 border px-3 py-1.5 rounded-full text-[10px] font-black tracking-widest';
-                        badge.innerHTML = '<span class="status-dot w-2 h-2 rounded-full"></span> PANEL ONLINE';
-                    } else {
-                        setProductOffline(badge);
-                    }
+                    await fetch(PANEL_DOMAIN + '/auth/login', { 
+                        mode: 'no-cors', 
+                        cache: 'no-cache',
+                        signal: controller.signal
+                    });
+                    
+                    clearTimeout(timeoutId);
+                    badge.className = 'status-container online flex items-center gap-2 border px-3 py-1.5 rounded-full text-[10px] font-black tracking-widest';
+                    badge.innerHTML = '<span class="status-dot w-2 h-2 rounded-full"></span> V2.4 ONLINE';
                 } catch (error) {
-                    setProductOffline(badge);
+                    badge.className = 'status-container offline flex items-center gap-2 border px-3 py-1.5 rounded-full text-[10px] font-black tracking-widest';
+                    badge.innerHTML = '<span class="status-dot w-2 h-2 rounded-full"></span> V2.4 OFFLINE';
                 }
             }
 
-            function setProductOffline(badge) {
-                badge.className = 'status-container offline flex items-center gap-2 border px-3 py-1.5 rounded-full text-[10px] font-black tracking-widest';
-                badge.innerHTML = '<span class="status-dot w-2 h-2 rounded-full"></span> PANEL OFFLINE';
-            }
-
-            // Jalankan cek saat halaman baru dibuka
             setTimeout(checkPanelStatus, 500);
-            // Ulangi cek setiap 1 menit
             setInterval(checkPanelStatus, 60000);
         });
     </script>
