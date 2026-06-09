@@ -53,10 +53,7 @@
 
         /* --- PARTICLES GLOW EFFECT --- */
         #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 1; pointer-events: none; }
-        #particles-js canvas {
-            filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.8));
-        }
-
+        #particles-js canvas { filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.8)); }
         .main-content { position: relative; z-index: 10; }
 
         /* --- TEXT EFFECTS & GLOW --- */
@@ -74,8 +71,7 @@
         
         .highlight-glow {
             color: #f87171; font-weight: 800;
-            text-shadow: 0 0 10px rgba(239, 68, 68, 0.6), 0 0 20px rgba(239, 68, 68, 0.3);
-            letter-spacing: 0.5px;
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.6), 0 0 20px rgba(239, 68, 68, 0.3); letter-spacing: 0.5px;
         }
 
         /* --- GLOW CURSOR (TIMELINE) --- */
@@ -84,11 +80,7 @@
             box-shadow: 0 0 10px #ef4444, 0 0 20px #ef4444;
             animation: patrolLine 3s ease-in-out infinite alternate; 
         }
-        @keyframes patrolLine {
-            0% { top: 0%; height: 30px; }
-            50% { height: 90px; }
-            100% { top: 100%; height: 30px; transform: translateY(-100%); }
-        }
+        @keyframes patrolLine { 0% { top: 0%; height: 30px; } 50% { height: 90px; } 100% { top: 100%; height: 30px; transform: translateY(-100%); } }
 
         /* --- GOLD BUTTON --- */
         @keyframes spinGlow { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
@@ -200,27 +192,25 @@
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // SINKRONISASI CEK STATUS PANEL (Native Fetch No-CORS)
-            const PANEL_DOMAIN = "https://michie.jkt48-private.com"; 
-
+            // SINKRONISASI CEK STATUS PANEL MENGGUNAKAN ALLORIGINS API (Akurat)
             async function checkPanelStatus() {
                 const badge = document.getElementById('server-status');
                 if (!badge) return;
-
-                const controller = new AbortController();
-                // Batas waktu tunggu 5 detik
-                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                
+                // Tambahkan timestamp agar selalu bypass cache dari proxy-nya
+                const PANEL_URL = "https://michie.jkt48-private.com/auth/login";
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(PANEL_URL)}&t=${Date.now()}`;
 
                 try {
-                    await fetch(PANEL_DOMAIN + '/auth/login', { 
-                        mode: 'no-cors', 
-                        cache: 'no-cache',
-                        signal: controller.signal
-                    });
+                    const response = await fetch(proxyUrl);
+                    const data = await response.json();
                     
-                    clearTimeout(timeoutId);
-                    badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_5px_#34d399]"></span> PANEL ONLINE';
-                    badge.className = 'text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 flex items-center gap-1.5 transition-all duration-300 shadow-[0_0_15px_rgba(16,185,129,0.2)]';
+                    if (data.contents) {
+                        badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_5px_#34d399]"></span> PANEL ONLINE';
+                        badge.className = 'text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 flex items-center gap-1.5 transition-all duration-300 shadow-[0_0_15px_rgba(16,185,129,0.2)]';
+                    } else {
+                        throw new Error("Panel offline");
+                    }
                 } catch (error) {
                     badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_5px_#ef4444]"></span> PANEL OFFLINE';
                     badge.className = 'text-[10px] font-bold text-red-500 bg-red-500/10 px-3 py-1 rounded-full border border-red-500/20 flex items-center gap-1.5 transition-all duration-300 shadow-[0_0_15px_rgba(239,68,68,0.2)]';
@@ -228,7 +218,7 @@
             }
 
             setTimeout(checkPanelStatus, 1500);
-            setInterval(checkPanelStatus, 60000);
+            setInterval(checkPanelStatus, 60000); // Cek setiap 60 detik
 
             // Loader Logic
             let count = 0;
@@ -254,23 +244,10 @@
             }, 30);
         });
 
-        // Konfigurasi Partikel Bercahaya
         function initParticles() {
             particlesJS("particles-js", {
-                "particles": {
-                    "number": { "value": 110, "density": { "enable": true, "value_area": 600 } },
-                    "color": { "value": ["#ef4444", "#ffffff", "#fca5a5"] },
-                    "shape": { "type": "circle" },
-                    "opacity": { "value": 0.8, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.2, "sync": false } },
-                    "size": { "value": 3, "random": true, "anim": { "enable": true, "speed": 4, "size_min": 0.3, "sync": false } },
-                    "line_linked": { "enable": true, "distance": 110, "color": "#ef4444", "opacity": 0.2, "width": 1 },
-                    "move": { "enable": true, "speed": 1.5, "direction": "none", "random": true, "straight": false, "out_mode": "out", "bounce": false }
-                },
-                "interactivity": {
-                    "detect_on": "canvas",
-                    "events": { "onhover": { "enable": true, "mode": "bubble" }, "onclick": { "enable": true, "mode": "push" } },
-                    "modes": { "bubble": { "distance": 150, "size": 6, "duration": 2, "opacity": 1, "speed": 3 } }
-                },
+                "particles": { "number": { "value": 110, "density": { "enable": true, "value_area": 600 } }, "color": { "value": ["#ef4444", "#ffffff", "#fca5a5"] }, "shape": { "type": "circle" }, "opacity": { "value": 0.8, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.2, "sync": false } }, "size": { "value": 3, "random": true, "anim": { "enable": true, "speed": 4, "size_min": 0.3, "sync": false } }, "line_linked": { "enable": true, "distance": 110, "color": "#ef4444", "opacity": 0.2, "width": 1 }, "move": { "enable": true, "speed": 1.5, "direction": "none", "random": true, "straight": false, "out_mode": "out", "bounce": false } },
+                "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "bubble" }, "onclick": { "enable": true, "mode": "push" } }, "modes": { "bubble": { "distance": 150, "size": 6, "duration": 2, "opacity": 1, "speed": 3 } } },
                 "retina_detect": true
             });
         }
@@ -301,4 +278,4 @@
         }
     </script>
 </body>
-</html>
+</html>                                                                                                                                                                 
