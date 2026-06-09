@@ -200,35 +200,31 @@
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // SINKRONISASI CEK STATUS PANEL (Metode Proxy AllOrigins untuk Bypass CORS)
+            // SINKRONISASI CEK STATUS PANEL (Native Fetch No-CORS)
             const PANEL_DOMAIN = "https://michie.jkt48-private.com"; 
 
             async function checkPanelStatus() {
                 const badge = document.getElementById('server-status');
                 if (!badge) return;
 
-                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(PANEL_DOMAIN)}&_=${new Date().getTime()}`;
+                const controller = new AbortController();
+                // Batas waktu tunggu 5 detik
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
 
                 try {
-                    const response = await fetch(proxyUrl);
-                    if (response.ok) {
-                        setOnline(badge);
-                    } else {
-                        setOffline(badge);
-                    }
+                    await fetch(PANEL_DOMAIN + '/auth/login', { 
+                        mode: 'no-cors', 
+                        cache: 'no-cache',
+                        signal: controller.signal
+                    });
+                    
+                    clearTimeout(timeoutId);
+                    badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_5px_#34d399]"></span> PANEL ONLINE';
+                    badge.className = 'text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 flex items-center gap-1.5 transition-all duration-300 shadow-[0_0_15px_rgba(16,185,129,0.2)]';
                 } catch (error) {
-                    setOffline(badge);
+                    badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_5px_#ef4444]"></span> PANEL OFFLINE';
+                    badge.className = 'text-[10px] font-bold text-red-500 bg-red-500/10 px-3 py-1 rounded-full border border-red-500/20 flex items-center gap-1.5 transition-all duration-300 shadow-[0_0_15px_rgba(239,68,68,0.2)]';
                 }
-            }
-
-            function setOnline(badge) {
-                badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_5px_#34d399]"></span> PANEL ONLINE';
-                badge.className = 'text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 flex items-center gap-1.5 transition-all duration-300 shadow-[0_0_15px_rgba(16,185,129,0.2)]';
-            }
-
-            function setOffline(badge) {
-                badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_5px_#ef4444]"></span> PANEL OFFLINE';
-                badge.className = 'text-[10px] font-bold text-red-500 bg-red-500/10 px-3 py-1 rounded-full border border-red-500/20 flex items-center gap-1.5 transition-all duration-300 shadow-[0_0_15px_rgba(239,68,68,0.2)]';
             }
 
             setTimeout(checkPanelStatus, 1500);
