@@ -200,38 +200,33 @@
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // SINKRONISASI CEK STATUS PANEL (Metode Favicon Gambar Akurat)
+            // SINKRONISASI CEK STATUS PANEL (Metode Proxy AllOrigins untuk Bypass CORS)
             const PANEL_DOMAIN = "https://michie.jkt48-private.com"; 
-            
-            function checkPanelStatus() {
+
+            async function checkPanelStatus() {
                 const badge = document.getElementById('server-status');
-                const img = new Image();
-                
-                const timeout = setTimeout(() => {
+                if (!badge) return;
+
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(PANEL_DOMAIN)}&_=${new Date().getTime()}`;
+
+                try {
+                    const response = await fetch(proxyUrl);
+                    if (response.ok) {
+                        setOnline(badge);
+                    } else {
+                        setOffline(badge);
+                    }
+                } catch (error) {
                     setOffline(badge);
-                }, 5000);
-
-                img.onload = function() {
-                    clearTimeout(timeout);
-                    setOnline(badge);
-                };
-
-                img.onerror = function() {
-                    clearTimeout(timeout);
-                    setOffline(badge);
-                };
-
-                img.src = PANEL_DOMAIN + '/favicon.ico?v=' + new Date().getTime();
+                }
             }
 
             function setOnline(badge) {
-                if(!badge) return;
                 badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_5px_#34d399]"></span> PANEL ONLINE';
                 badge.className = 'text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 flex items-center gap-1.5 transition-all duration-300 shadow-[0_0_15px_rgba(16,185,129,0.2)]';
             }
 
             function setOffline(badge) {
-                if(!badge) return;
                 badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_5px_#ef4444]"></span> PANEL OFFLINE';
                 badge.className = 'text-[10px] font-bold text-red-500 bg-red-500/10 px-3 py-1 rounded-full border border-red-500/20 flex items-center gap-1.5 transition-all duration-300 shadow-[0_0_15px_rgba(239,68,68,0.2)]';
             }
